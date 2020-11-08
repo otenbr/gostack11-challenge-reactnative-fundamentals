@@ -36,26 +36,36 @@ interface Product {
 }
 
 const Cart: React.FC = () => {
-  const { increment, decrement, products } = useCart();
+  const { increment, decrement, products, clearCart } = useCart();
 
   function handleIncrement(id: string): void {
     // TODO
+    increment(id);
   }
 
   function handleDecrement(id: string): void {
     // TODO
+    decrement(id);
   }
 
   const cartTotal = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    // TODO RETURN THE SUM OF THE PRICE OF THE PRODUCTS IN THE CART
+    const totalValue = products.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0.0,
+    );
 
-    return formatValue(0);
+    return formatValue(totalValue);
   }, [products]);
 
   const totalItensInCart = useMemo(() => {
     // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    const totalItems = products.reduce(
+      (total, item) => total + item.quantity,
+      0,
+    );
 
-    return 0;
+    return totalItems;
   }, [products]);
 
   return (
@@ -106,6 +116,9 @@ const Cart: React.FC = () => {
         />
       </ProductContainer>
       <TotalProductsContainer>
+        <ActionButton onPress={() => clearCart()}>
+          <FeatherIcon name="stop-circle" size={24} color="#fff" />
+        </ActionButton>
         <FeatherIcon name="shopping-cart" color="#fff" size={24} />
         <TotalProductsText>{`${totalItensInCart} itens`}</TotalProductsText>
         <SubtotalValue>{cartTotal}</SubtotalValue>

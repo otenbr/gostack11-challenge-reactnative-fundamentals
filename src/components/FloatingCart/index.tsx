@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -19,20 +19,23 @@ import { useCart } from '../../hooks/cart';
 // Navegação no clique do TouchableHighlight
 
 const FloatingCart: React.FC = () => {
-  const { products } = useCart();
+  const { products, clearCart } = useCart();
 
   const navigation = useNavigation();
 
   const cartTotal = useMemo(() => {
     // TODO RETURN THE SUM OF THE PRICE FROM ALL ITEMS IN THE CART
+    const totalValue = products.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0.0,
+    );
 
-    return formatValue(0);
+    return formatValue(totalValue);
   }, [products]);
 
   const totalItensInCart = useMemo(() => {
     // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
-
-    return 0;
+    return products.reduce((sum, item) => sum + item.quantity, 0.0);
   }, [products]);
 
   return (
@@ -43,6 +46,9 @@ const FloatingCart: React.FC = () => {
       >
         <FeatherIcon name="shopping-cart" size={24} color="#fff" />
         <CartButtonText>{`${totalItensInCart} itens`}</CartButtonText>
+      </CartButton>
+      <CartButton onPress={() => clearCart()}>
+        <FeatherIcon name="stop-circle" size={24} color="#fff" />
       </CartButton>
 
       <CartPricing>
